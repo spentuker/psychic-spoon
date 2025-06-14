@@ -11,32 +11,36 @@ class TreeNode {
 }
 public class UpsideDown {
     
-    public static TreeNode buildTree(List<Integer> data) {
-        if (data.isEmpty() || data.get(0) == -1) return null;
-        
-        Queue<TreeNode> queue = new LinkedList<>();
-        TreeNode root = new TreeNode(data.get(0));
-        queue.offer(root);
-        
-        int i = 1;
-        while (i < data.size()) {
-            TreeNode current = queue.poll();
-            
-            if (i < data.size() && data.get(i) != -1) {
-                current.left = new TreeNode(data.get(i));
-                queue.offer(current.left);
-            }
-            i++;
-            
-            if (i < data.size() && data.get(i) != -1) {
-                current.right = new TreeNode(data.get(i));
-                queue.offer(current.right);
-            }
-            i++;
-        }
-        
-        return root;
+   public static TreeNode buildTree(List<Integer> data) {
+    if (data == null || data.isEmpty()) return null;
+
+    TreeNode root = new TreeNode(data.get(0));
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    int i = 1;
+
+    while (i + 1 < data.size()) {
+        TreeNode current = queue.poll();
+
+        // According to constraints: every node has either 0 or 2 children
+        // Add left and right
+        TreeNode left = new TreeNode(data.get(i));
+        TreeNode right = new TreeNode(data.get(i + 1));
+
+        current.left = left;
+        current.right = right;
+
+        // Only add left child to queue because:
+        //  - left child might have children
+        //  - right child is always a leaf (as per constraints)
+        queue.offer(left);
+
+        i += 2;
     }
+
+    return root;
+}
+
     
     static TreeNode upsideDownBinaryTree(TreeNode root){
         TreeNode cur=root;
@@ -83,6 +87,8 @@ public class UpsideDown {
             System.err.println("cur val: "+cur.val);
             LCQ.add(cur.val);
             System.out.println(cur.val+" Added to LCQ");
+            // if(cur.val==1){
+            // System.out.println("cur right val"+cur.right.val);}
             if(isLeaf(cur)){ System.err.println(cur.val+"is a leaf node- returning now");return;}
             System.out.println(cur.right.val+" Added to RCQ");
             RCQ.add(cur.right.val);
