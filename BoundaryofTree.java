@@ -8,14 +8,14 @@ class Solution {
 
         if(root==null) return res;
 
-
-        leftBoundary(root,res);
+        res.add(root.val);
+        leftBoundary(root.left,res);
         System.out.println("After Left boundary"+res);
 
         leafBoundary(root,res);
         System.out.println("After leaf boundary"+res);
 
-        ArrayList<Integer> al=rightBoundary(root,res);
+        ArrayList<Integer> al=rightBoundary(root.right,res);
         Collections.reverse(al);
         for(int a:al){
             res.add(a);
@@ -62,7 +62,7 @@ class Solution {
     ArrayList<Integer> rightBoundary(TreeNode root,List<Integer> res){
 
         ArrayList<Integer> al=new ArrayList<>();
-        TreeNode cur=root.right;
+        TreeNode cur=root;
         System.err.println("Switched to "+ cur + "Before loop");
 
         while(cur != null){
