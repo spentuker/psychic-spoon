@@ -3,49 +3,37 @@ import java.util.*;
 
 class Solution{
     int findMaxLength(int[] nums){
-        int i=0;
-        int j=nums.length-1;
-        int fromStart=findMaxLengthHelper(nums,i);
-        int fromEnd=findMaxLengthHelper(nums,j);
 
-        System.err.println(fromEnd);
-        System.err.println(fromStart);
-
-        return Math.max(fromStart,fromEnd);
-    }
-    int findMaxLengthHelper(int[] nums,int i){
-
-        HashMap<Integer,Integer> hm=new HashMap<>();
-
-        for(int k:nums){
-            hm.put(k,hm.getOrDefault(k,0)+1);
+        HashMap<Integer,Integer> samosa=new HashMap<>();
+        int c=0;
+        int len=0;
+        samosa.put(0,-1);
+       for(int i=0;i<nums.length;i++){
+        if(nums[i]==1) c=c+1;
+        else c=c-1;
+        if(samosa.containsKey(c)){
+            len=Math.max(len,i-samosa.get(c));
+            System.out.println("Happening at i= "+i+"For value of c="+c+"Now len= "+len);
+            System.err.println(samosa);
         }
-
-        if(hm.size()==1) return 0;
-
-        int oneC=hm.get(1);
-        int zeroC=hm.get(0);
-        // int i=0;
-        if(i==0){
-        while(oneC!=zeroC){
-            hm.put(nums[i],hm.get(nums[i])-1);
-            i++;
-            oneC=hm.get(1);
-            zeroC=hm.get(0);
-        }
+       else{
+        if(nums[i]==1){
+            System.err.println("1 triggered at "+i);
+            samosa.put(c,i);
+            System.out.println(samosa);
         }
         else{
-            while(oneC!=zeroC){
-            hm.put(nums[i],hm.get(nums[i])-1);
-            i--;
-            oneC=hm.get(1);
-            zeroC=hm.get(0);
-        }
+            System.err.println("0 detected at "+i);
+            samosa.put(c,i);
+            System.err.println(samosa);
         }
 
-        return oneC+zeroC;
-
+        }
+       
+      
     }
+     return len;
+}
 }
 
 
@@ -68,16 +56,17 @@ public class contiArray {
         Solution sol = new Solution();
 
         int[][] testCases = {
-            {0, 1},                    // Expected: 2
-            {0, 1, 0},                 // Expected: 2
-            {0, 0, 1, 0, 0, 0, 1, 1},  // Expected: 6
-            {0, 1, 1},                 // Expected: 2
-            {1, 1, 1, 1},              // Expected: 0
-            {0, 0, 0, 0},              // Expected: 0
-            {0, 1, 1, 0, 1, 1, 1, 0},  // Expected: 4
-            {0, 1, 0, 1, 0, 1, 0},     // Expected: 6
-            {1, 0, 1, 0, 1, 0, 1, 0},  // Expected: 8 (fully balanced)
-            {1, 1, 0, 0, 1, 0}         // Expected: 6 (entire array balanced)
+            // {0, 1},       // Expected: 2 1
+            // {0,1,1,1,1,1,0,0,0}        
+            // {0, 1, 0},                     // Expected: 2 2
+            {0, 0, 1, 0, 0, 0, 1, 1},  // Expected: 6 3
+            // {0, 1, 1},                 // Expected: 2 4
+            {1, 1, 1, 1},              // Expected: 0 5
+            // {0, 0, 0, 0},              // Expected: 0 6 
+            // {0, 1, 1, 0, 1, 1, 1, 0},  // Expected: 4 7
+            // {0, 1, 0, 1, 0, 1, 0},     // Expected: 6 8
+            {1, 0, 1, 0, 1, 0, 1, 0},  // Expected: 8 (fully balanced) 9
+            {1, 1, 0, 0, 1, 0}         // Expected: 6 (entire array balanced) 10
         };
 
         for (int i = 0; i < testCases.length; i++) {
