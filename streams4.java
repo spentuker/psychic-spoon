@@ -13,15 +13,36 @@ public class streams4 {
     
     Stream<Article> s= articles.stream();
     
+    // Map<String,List<Article>> names=
+    Map<String,Double> names=
+// long c=
     s
         // .map(Article::getWordCount)
-        .filter(i->i.getWordCount()>=800)
-        .map(Article::getAuthor)
-        .forEach(System.out::println);
+        // .filter(i->i.getWordCount()>=800)
+        // .map(Article::getAuthor)
+        // .forEach(System.out::println);
+        // .map(Article::getWordCount)
 
 
+        // .filter(i->i.getWordCount()>=1200)
+        // .map(Article::getAuthor)
+        // .forEach(System.out::println);
 
 
+        // .collect(Collectors.groupingBy(Article::getAuthor));  //enable the map
+        
+        // .collect(Collectors.groupingBy(Article::getAuthor,Collectors.counting()));
+
+        .collect(Collectors.groupingBy(Article::getAuthor,Collectors.averagingInt(Article::getWordCount)));
+        
+        // System.err.println(c);
+        System.err.println(names); // for collection implementation.
+
+        Optional <Map.Entry<String,Double>> Max=names.entrySet().stream()
+                                                .max(Map.Entry.comparingByValue());
+
+        Max.map(Map.Entry::getKey);
+        System.err.println(Max);
 
     }
 }
