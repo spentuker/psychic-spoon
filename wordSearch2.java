@@ -1,75 +1,103 @@
-import java.util.ArrayList;
+import java.util.*;
 
 public class wordSearch2 {
     public static void main(String[] args) {
         Solution sol = new Solution();
+        // char[][] board = {
+        //     {'o','a','a','n'},
+        //     {'e','t','a','e'},
+        //     {'i','h','k','r'},
+        //     {'i','f','l','v'}
+        // };
+
         char[][] board = {
-            {'o','a','a','n'},
-            {'e','t','a','e'},
-            {'i','h','k','r'},
-            {'i','f','l','v'}
+            {'a','b'},
+            {'c','d'}
         };
 
-        String[] words = {"oath","pea","eat","rain"};
+        // String[] words = {"oath","pea","eat","rain"};
+        String[] words = {"abcb"};
         List<String> result = sol.findWords(board, words);
         System.out.println(result);
     }
 }
 
 class Solution{
-    List<String> findWords (char[][] board, String[] words){
-        Node root=new Node();
-        for(String word:words){
-        root.insert(word);
-        }
-        List<String> hello=wordSearch(board,words,root);
-    }
+    List<String> findWords(char[][] board,String[] words){
+        // List<String> res=new ArrayList<>();
+        Node trie= insertWords(new Node(),words);
+        Set<String> result = new HashSet<>();
 
-    List<String> wordSearch(char[][] board,String[][] words,Node root){
-        List<String> res=new ArrayList<>();
         for(int i=0;i<board.length;i++){
-            for(int j=0;i<board[0].length;j++){
-                // char a=board[i][j];
-                    dfs(board,i,j,root,res);
+            for(int j=0;j<board[0].length;j++){
+                dfs(trie,i,j,new String(),result,board);
             }
         }
+        
+        
+        for(String a: result){
+            System.err.println(a);
+        }
+
+        return new ArrayList<>(result); //wrong returrn, will come back to it later. maybe fixed now idk. 
     }
-    boolean dfs(char[][] board,int i,int j,Node root,List<String> res){
-        if(root.eow==true) return true;
-        if(i<0 || i>= board.length || j<0 || j>=board[0].length) return false;
-        if(root.children[board[i][j]-'a']==null) return false;
-        else root=root.children[board[i][j]-'a'];
 
-        board[i][j]='.';
-        l_n=dfs(board,i,j-1,root,res);
-        r_n=dfs(board,i,j+1,root,res);
-        t_n=dfs(board,i-1,j,root);
-        b_n=dfs(board,i+1,j,root);
-
-
-
+    Node insertWords(Node root,String[] words){
+        for(String s:words){
+            root.insert(s);
+        }
+        return root;
     }
-    
 
+    void dfs(Node trie,int i,int j, String s,Set<String> result,char[][] board){
+
+        if(i<0 || i >= board.length || j<0 || j >= board[0].length || board[i][j] == '.') return;
+
+        
+
+        if(trie.eow==true){
+            result.add(s); 
+            return;
+        }
+        s+=board[i][j];
+        int a=board[i][j] - 'a';
+        if(trie.children[a] != null){
+            trie=trie.children[a];
+            char temp=board[i][j];
+
+            board[i][j]='.';
+
+            dfs(trie, i, j-1, s, result, board);
+            dfs(trie, i, j+1, s, result, board);
+            dfs(trie, i-1, j, s, result, board);
+            dfs(trie, i+1, j, s, result, board);
+
+            board[i][j]=temp;
+        }
+        return;
+    }
 }
 
 class Node{
-    Node[] children=new children[26];
-    boolean eow=false;
+    Node[] children;
+    boolean eow;
 
-    Node trie=new Node();
-
-    void insert(String word){
-        Node root=trie;
-        for(char c:word.toCharArray()){
-            int a=c-'a';
-            if(root.children[a]==null){
-                root.children[a]=new Node();
-            }
-            root=root.children;
-        }
-        root.eow=false;
+    Node(){
+        this.children=new Node[26];
+        this.eow=false;
     }
 
+    // Node root=new Node();
 
+    void insert(String word){
+       Node root=this;
+        for(char c:word.toCharArray()){
+            int i=c-'a';
+            if(root.children[i]==null){
+                root.children[i]=new Node();
+            }
+            root=root.children[i];
+        }
+        root.eow=true;
+    }
 }

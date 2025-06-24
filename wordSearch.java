@@ -74,13 +74,14 @@ class Solution{
         if(j<0 || i<0 || j>=board[0].length || i>=board.length) return false;
 
         if(board[i][j]==word.charAt(idx)){
+        char temp=board[i][j];
         board[i][j]='.';
         boolean l_n=dfs(board, word, i, j-1, idx+1);
         boolean r_n=dfs(board, word, i, j+1, idx+1);
 
         boolean t_n=dfs(board, word, i-1, j, idx+1);
         boolean b_n=dfs(board, word, i+1, j, idx+1);
-
+        board[i][j]=temp; //in this way, suppose a test case exists, AA and then below the first A, there is B. The target word is AAB. Now, this will output "true" in path of A(2nd A)->A->B
         return l_n || r_n || t_n || b_n;
         }
         return false;

@@ -1,6 +1,7 @@
 public class charCheck {
     public static void main(String[] args) {
-    
-        System.out.println(c);
+        char c='9';
+        int i=c-'0';
+        System.out.println(i);
     }
 }
