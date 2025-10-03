@@ -1,0 +1,88 @@
+// Last updated: 10/3/2025, 2:14:00 PM
+class Solution{
+    List<String> findWords(char[][] board,String[] words){
+        // List<String> res=new ArrayList<>();
+        Node trie= insertWords(new Node(),words);
+        Set<String> result = new HashSet<>();
+
+        for(int i=0;i<board.length;i++){
+            for(int j=0;j<board[0].length;j++){
+                dfs(trie,i,j,new String(),result,board);
+            }
+        }
+        
+        
+        for(String a: result){
+            System.err.println(a);
+        }
+
+        return new ArrayList<>(result); //wrong returrn, will come back to it later. maybe fixed now idk. 
+    }
+
+    Node insertWords(Node root,String[] words){
+        for(String s:words){
+            root.insert(s);
+        }
+        return root;
+    }
+
+    void dfs(Node trie,int i,int j, String s,Set<String> result,char[][] board){
+
+        if(i<0 || i >= board.length || j<0 || j >= board[0].length || board[i][j] == '.') return;
+
+        int a= board[i][j]-'a';
+        if(trie.children[a]==null) return;
+        trie=trie.children[a];
+        s+=board[i][j];
+
+        if(trie.eow==true){
+            // s+=board[i][j];
+            result.add(s); 
+            trie.eow=false;
+            // return;
+        }
+        // s+=board[i][j];
+
+        
+        
+        // int a=board[i][j] - 'a';
+
+            //  trie=trie.children[a];
+            char temp=board[i][j];
+
+            board[i][j]='.';
+
+            dfs(trie, i, j-1, s, result, board);
+            dfs(trie, i, j+1, s, result, board);
+            dfs(trie, i-1, j, s, result, board);
+            dfs(trie, i+1, j, s, result, board);
+
+            board[i][j]=temp;
+        
+        return;
+    }
+}
+
+class Node{
+    Node[] children;
+    boolean eow;
+
+    Node(){
+        this.children=new Node[26];
+        this.eow=false;
+    }
+
+    // Node root=new Node();
+
+    void insert(String word){
+       Node root=this;
+        for(char c:word.toCharArray()){
+            int i=c-'a';
+            if(root.children[i]==null){
+                root.children[i]=new Node();
+            }
+            root=root.children[i];
+        }
+        root.eow=true;
+    }
+}
